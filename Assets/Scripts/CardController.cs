@@ -46,20 +46,21 @@ public class CardController : MonoBehaviour
     {
         if (!isAnimating && GameController.instance != null && GameController.instance.canFlip && !isFlipped)
         {
-            FlipCard();
+            FlipCard(true); // Flip to show front
             GameController.instance.CardFlipped(this);
         }
     }
 
     // Method to flip the card
-    public void FlipCard()
+    public void FlipCard(bool flipToFront)
     {
         if (isAnimating)
             return;
 
         isAnimating = true;
 
-        animator.SetTrigger("Flip");
+        // Set IsFlipping to true to start the animation
+        animator.SetBool("IsFlipping", true);
 
         // Play flip sound
         if (flipSound != null)
@@ -68,23 +69,26 @@ public class CardController : MonoBehaviour
         }
 
         // Start the coroutine to switch card content
-        StartCoroutine(SwitchCardContent());
+        StartCoroutine(SwitchCardContent(flipToFront));
     }
 
     // Coroutine to switch card content during flip animation
-    private IEnumerator SwitchCardContent()
+    private IEnumerator SwitchCardContent(bool flipToFront)
     {
         // Wait until halfway through the animation
-        float animationDuration = 0.5f; // Total duration of the flip animation
+        float animationDuration = 0.5f;
         yield return new WaitForSeconds(animationDuration / 2f);
 
-        // Toggle the content visibility
-        isFlipped = !isFlipped;
+        // Set the content visibility
+        isFlipped = flipToFront;
         frontContent.SetActive(isFlipped);
         backContent.SetActive(!isFlipped);
 
         // Wait until the animation ends
         yield return new WaitForSeconds(animationDuration / 2f);
+
+        // Reset IsFlipping to false
+        animator.SetBool("IsFlipping", false);
 
         isAnimating = false;
     }

@@ -220,8 +220,8 @@ public class GameController : MonoBehaviour
             yield return new WaitForSeconds(0.5f); // Wait to let the player see the cards
 
             // Flip the cards back over
-            firstFlippedCard.FlipCard();
-            secondFlippedCard.FlipCard();
+            firstFlippedCard.FlipCard(false); // Flip to show back
+            secondFlippedCard.FlipCard(false);
 
             // Play mismatch sound
             if (mismatchAudioSource != null)
